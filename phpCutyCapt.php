@@ -16,6 +16,7 @@ namespace phpCutyCapt;
  * @version 1.0
  */
 
+
 class phpCutyCapt {
     /**
      * The url of the website page, we're making the screenshot of
@@ -64,7 +65,7 @@ class phpCutyCapt {
      * @param int $minWidth
      * @param bool $pluginsEnable
      * @param int $delay
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public function __construct($parseUrl, $outFile, $minWidth = 1024, $pluginsEnable = true, $delay = 0)
     {
@@ -76,7 +77,7 @@ class phpCutyCapt {
         $this->delay          = $delay;
 
         if(!is_dir(dirname($outFile)) OR !is_writeable(dirname($outFile))) {
-            throw new Exception('Directory for screenshotfile does not exist');
+            throw new InvalidArgumentException('Directory for screenshotfile does not exist');
         }
     }
 
