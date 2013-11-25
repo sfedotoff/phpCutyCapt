@@ -67,7 +67,7 @@ class phpCutyCapt {
      * @param int $delay
      * @throws InvalidArgumentException
      */
-    public function __construct($parseUrl, $outFile, $minWidth = 1024, $pluginsEnable = true, $delay = 0)
+    public function __construct($parseUrl, $outFile, $minWidth = 1024, $pluginsEnable = true, $delay = 1)
     {
         $this->parseURL       = escapeshellarg($parseUrl);
         $this->outFile        = $outFile;
@@ -87,15 +87,18 @@ class phpCutyCapt {
      */
     public function screenshot()
     {
-        $cmd  = 'xvfb-run --server-args="-screen 0, 1024x768x24" ./CutyCapt';
-        $cmd .= '--min-width='.$this->minWidth;
-        $cmd .= '--url='.$this->parseURL;
+        $cmd  = 'xvfb-run --auto-servernum --server-args="-screen 0, 1024x768x24" lib/CutyCapt';
+        $cmd .= ' --min-width='.$this->minWidth;
+        $cmd .= ' --min-height=1024';
+        $cmd .= ' --url='.$this->parseURL;
         $cmd .= ' --out='.$this->outFile;
         $cmd .= ' --delay='.$this->delay;
         $cmd .= ($this->pluginsEnable) ? ' --plugins=on' : ' --plugins=off';
+        $cmd .= " --insecure";
 
-        exec($cmd);
-
+        #exec("source /opt/rh/qt48/enable && ".$cmd, $output);//For CentOS 6.x
+        exec($cmd, $output);
+        
         if(file_exists($this->outFile)) {
             if(filesize($this->outFile)>1) {
                 return true;
@@ -114,4 +117,4 @@ class phpCutyCapt {
     {
         unlink($this->outFile);
     }
-} 
+}
